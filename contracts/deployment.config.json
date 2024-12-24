@@ -1,0 +1,88 @@
+{
+  "project": "EVM Starter Kit",
+  "version": "1.0.0",
+
+  "contracts": {
+    "FreeMintToken": {
+      "source": "src/FreeMintToken.sol:FreeMintToken",
+      "type": "ERC20",
+      "description": "ERC20 token with free minting for testing"
+    },
+    "FreeMintNFT": {
+      "source": "src/FreeMintNFT.sol:FreeMintNFT",
+      "type": "ERC721",
+      "description": "ERC721 NFT with free minting for testing"
+    }
+  },
+
+  "chains": {
+    "sepolia": {
+      "chainId": 11155111,
+      "name": "Sepolia",
+      "rpcEnvVar": "SEPOLIA_RPC_URL",
+      "explorer": {
+        "name": "Blockscout",
+        "url": "https://eth-sepolia.blockscout.com",
+        "apiUrl": "https://eth-sepolia.blockscout.com/api/",
+        "verifier": "blockscout"
+      },
+      "nativeCurrency": {
+        "name": "Sepolia ETH",
+        "symbol": "ETH",
+        "decimals": 18
+      },
+      "subgraph": {
+        "thegraphNetwork": "sepolia",
+        "goldskyNetwork": "sepolia"
+      }
+    }
+  },
+
+  "steps": [
+    {
+      "id": 1,
+      "type": "deploy",
+      "chain": "sepolia",
+      "contract": "FreeMintToken",
+      "constructorArgs": ["Free Mint Token", "FMT", "1000000000000000000000"],
+      "verify": true
+    },
+    {
+      "id": 2,
+      "type": "deploy",
+      "chain": "sepolia",
+      "contract": "FreeMintNFT",
+      "constructorArgs": ["Free Mint NFT", "FMNFT", 10000, 10, "https://api.example.com/nft/"],
+      "verify": true
+    }
+  ],
+
+  "deployments": {
+    "sepolia": {
+      "FreeMintToken": {
+        "address": "0x2Dfc3375e79DC0fc9851F451D8cc7F94B2C5854c",
+        "deploymentTx": null,
+        "blockNumber": null,
+        "verified": true
+      },
+      "FreeMintNFT": {
+        "address": "0x1B3b102adc9405EBB9A6a9Ff85562D5c8E5eB0D4",
+        "deploymentTx": null,
+        "blockNumber": null,
+        "verified": true
+      }
+    }
+  },
+
+  "sync": {
+    "frontend": {
+      "tokensPath": "../frontend/constants/tokens",
+      "contractsPath": "../frontend/constants/contracts",
+      "abiSource": "out"
+    },
+    "subgraphs": {
+      "configPath": "../subgraphs/deployment.config.json",
+      "abiPath": "../subgraphs"
+    }
+  }
+}
