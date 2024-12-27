@@ -1,0 +1,99 @@
+# Jokjipge Prediction Market Subgraph Schema
+
+# ============ Core Entities ============
+
+type Market @entity {
+  id: ID! # market address
+  marketId: BigInt!
+  creator: Bytes!
+  question: String!
+  category: String!
+  outcomes: [String!]!
+  resolutionDate: BigInt!
+  totalVolume: BigInt!
+  yesPool: BigInt!
+  noPool: BigInt!
+  status: String! # OPEN, CLOSED, RESOLVED
+  result: Int # winning outcome
+  createdAt: BigInt!
+  resolvedAt: BigInt
+  bets: [Bet!]! @derivedFrom(field: "market")
+  positionIds: [String!]! # Track position IDs for resolution updates
+}
+
+type Bet @entity {
+  id: ID! # txHash-logIndex
+  market: Market!
+  user: User!
+  outcome: Int! # 0=NO, 1=YES
+  amount: BigInt!
+  shares: BigInt!
+  odds: BigInt! # odds at time of bet
+  createdAt: BigInt!
+  claimed: Boolean!
+  claimedAmount: BigInt
+}
+
+type User @entity {
+  id: ID! # address
+  totalBets: BigInt!
+  totalWagered: BigInt!
+  totalWon: BigInt!
+  totalLost: BigInt!
+  pnl: BigInt!
+  winCount: BigInt!
+  lossCount: BigInt!
+  bets: [Bet!]! @derivedFrom(field: "user")
+  positions: [Position!]! @derivedFrom(field: "user")
+}
+
+type Position @entity {
+  id: ID! # user-market-outcome (e.g., "0x123-0x456-1" for YES position)
+  user: User!
+  market: Market!
+  outcome: Int! # 0=NO, 1=YES
+  amount: BigInt!
+  shares: BigInt!
+  claimed: Boolean!
+  pnl: BigInt
+}
+
+# ============ Event Log Entities (Immutable) ============
+
+type MarketEvent @entity(immutable: true) {
+  id: Bytes!
+  eventType: String! # CREATED, RESOLVED
+  market: Bytes!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}
+
+type BetEvent @entity(immutable: true) {
+  id: Bytes!
+  user: Bytes!
+  market: Bytes!
+  outcome: Int!
+  amount: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+}
+
+# ============ Aggregation Entities ============
+
+type DailyStats @entity {
+  id: ID! # YYYY-MM-DD timestamp
+  date: BigInt!
+  marketsCreated: BigInt!
+  betsPlaced: BigInt!
+  volumeTraded: BigInt!
+}
+
+type GlobalStats @entity {
+  id: ID! # "global"
+  totalMarkets: BigInt!
+  totalBets: BigInt!
+  totalVolume: BigInt!
+  activeMarkets: BigInt!
+}
