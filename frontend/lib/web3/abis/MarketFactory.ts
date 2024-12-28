@@ -1,0 +1,100 @@
+// MarketFactory ABI for creating and managing prediction markets
+export const MarketFactoryABI = [
+  {
+    type: 'function',
+    name: 'createMarket',
+    inputs: [
+      { name: 'question', type: 'string', internalType: 'string' },
+      { name: 'category', type: 'string', internalType: 'string' },
+      { name: 'resolutionTime', type: 'uint256', internalType: 'uint256' },
+    ],
+    outputs: [
+      { name: 'marketId', type: 'uint256', internalType: 'uint256' },
+      { name: 'market', type: 'address', internalType: 'address' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'getAllMarkets',
+    inputs: [],
+    outputs: [{ name: 'marketIds', type: 'uint256[]', internalType: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getMarket',
+    inputs: [{ name: 'marketId', type: 'uint256', internalType: 'uint256' }],
+    outputs: [
+      {
+        name: 'info',
+        type: 'tuple',
+        internalType: 'struct IMarketFactory.MarketInfo',
+        components: [
+          { name: 'marketAddress', type: 'address', internalType: 'address' },
+          { name: 'creator', type: 'address', internalType: 'address' },
+          { name: 'question', type: 'string', internalType: 'string' },
+          { name: 'category', type: 'string', internalType: 'string' },
+          { name: 'resolutionTime', type: 'uint256', internalType: 'uint256' },
+          { name: 'resolved', type: 'bool', internalType: 'bool' },
+          { name: 'winningOutcome', type: 'uint8', internalType: 'uint8' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getMarketCount',
+    inputs: [],
+    outputs: [{ name: 'count', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getMarketsByCreator',
+    inputs: [{ name: 'creator', type: 'address', internalType: 'address' }],
+    outputs: [{ name: 'marketIds', type: 'uint256[]', internalType: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'owner',
+    inputs: [],
+    outputs: [{ name: '', type: 'address', internalType: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'resolveMarket',
+    inputs: [
+      { name: 'marketId', type: 'uint256', internalType: 'uint256' },
+      { name: 'winningOutcome', type: 'uint8', internalType: 'uint8' },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'event',
+    name: 'MarketCreated',
+    inputs: [
+      { name: 'marketId', type: 'uint256', indexed: true, internalType: 'uint256' },
+      { name: 'market', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'creator', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'question', type: 'string', indexed: false, internalType: 'string' },
+      { name: 'category', type: 'string', indexed: false, internalType: 'string' },
+      { name: 'resolutionTime', type: 'uint256', indexed: false, internalType: 'uint256' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'MarketResolved',
+    inputs: [
+      { name: 'marketId', type: 'uint256', indexed: true, internalType: 'uint256' },
+      { name: 'market', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'winningOutcome', type: 'uint8', indexed: false, internalType: 'uint8' },
+    ],
+    anonymous: false,
+  },
+] as const
