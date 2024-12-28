@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Jokjipge Light Theme */
+    --primary: 159 100% 35%; /* Cyber Mint (darker for light bg) */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 253 80% 55%; /* Violet (adjusted for light) */
+    --secondary-foreground: 0 0% 100%;
+
+    --background: 210 20% 98%; /* Light gray-blue */
+    --foreground: 215 50% 10%;
+
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 215 50% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 50% 10%;
+
+    --success: 128 60% 40%; /* Win Green */
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 352 80% 50%; /* Loss Red */
+    --destructive-foreground: 0 0% 100%;
+
+    --live: 22 90% 50%; /* Live Orange */
+    --live-foreground: 0 0% 100%;
+
+    --warning: 45 100% 45%; /* Warning Amber */
+    --warning-foreground: 0 0% 0%;
+
+    --muted: 210 20% 94%;
+    --muted-foreground: 215 20% 40%;
+
+    --accent: 210 20% 92%;
+    --accent-foreground: 215 50% 10%;
+
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 159 100% 35%;
+    --radius: 0.5rem;
+
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+  }
+
+  .dark {
+    /* Jokjipge Dark Theme - Sports Betting Inspired */
+    --primary: 159 100% 45%; /* Cyber Mint #00E5A0 */
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 253 98% 68%; /* Violet #7c60fd */
+    --secondary-foreground: 0 0% 100%;
+
+    --background: 215 50% 6%; /* Dark Blue #0D1117 */
+    --foreground: 0 0% 100%;
+
+    --card: 215 30% 10%; /* Card #161B22 */
+    --card-foreground: 0 0% 100%;
+
+    --popover: 215 30% 10%;
+    --popover-foreground: 0 0% 100%;
+
+    --success: 128 60% 50%; /* Win Green #4be15a */
+    --success-foreground: 0 0% 0%;
+
+    --destructive: 352 93% 56%; /* Loss Red #f72349 */
+    --destructive-foreground: 0 0% 100%;
+
+    --live: 22 100% 60%; /* Live Orange #FF6B35 */
+    --live-foreground: 0 0% 100%;
+
+    --warning: 45 100% 55%; /* Warning Amber #FFB300 */
+    --warning-foreground: 0 0% 0%;
+
+    --muted: 215 20% 20%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 215 20% 15%;
+    --accent-foreground: 0 0% 100%;
+
+    --border: 215 20% 18%;
+    --input: 215 20% 18%;
+    --ring: 159 100% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+}
+
+/* VERY-002: VeryChat widget z-index management
+ * Ensures VeryChat transaction widgets appear above app dialogs
+ * This prevents the widget from being blocked when confirming transactions */
+[data-verychat-widget],
+.verychat-modal,
+.verychat-overlay,
+.wepin-widget,
+.wepin-modal,
+.wepin-overlay {
+  z-index: 99999 !important;
+}
