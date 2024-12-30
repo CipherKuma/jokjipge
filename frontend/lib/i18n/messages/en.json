@@ -1,0 +1,171 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "appName": "족집게",
+    "tagline": "Prediction Markets",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "loadMore": "Load More",
+    "noResults": "No results found",
+    "error": "Something went wrong",
+    "initializing": "Initializing...",
+    "showing": "Showing {start}-{end} of {total}",
+    "page": "{current} / {total}"
+  },
+  "nav": {
+    "markets": "Markets",
+    "myBets": "My Bets",
+    "leaderboard": "Leaderboard"
+  },
+  "wallet": {
+    "connect": "Connect Wallet",
+    "connecting": "Connecting...",
+    "disconnect": "Disconnect",
+    "copyAddress": "Copy Address",
+    "copied": "Copied!",
+    "viewExplorer": "View on Explorer"
+  },
+  "home": {
+    "title": "Jokjipge Markets",
+    "subtitle": "Predict outcomes and earn rewards on VeryChain"
+  },
+  "stats": {
+    "totalMarkets": "Total Markets",
+    "totalVolume": "Total Volume",
+    "activeBets": "Active Bets",
+    "yourPnL": "Your P&L"
+  },
+  "filters": {
+    "all": "All",
+    "live": "Live",
+    "upcoming": "Upcoming",
+    "resolved": "Resolved",
+    "searchPlaceholder": "Search markets...",
+    "allCategories": "All Categories",
+    "newest": "Newest",
+    "popular": "Popular",
+    "endingSoon": "Ending Soon"
+  },
+  "sidebar": {
+    "categories": "Categories",
+    "status": "Status",
+    "trending": "Trending",
+    "endingSoon": "Ending Soon",
+    "failedToLoad": "Failed to load"
+  },
+  "categories": {
+    "sports": "Sports",
+    "entertainment": "Entertainment",
+    "politics": "Politics",
+    "gaming": "Gaming",
+    "crypto": "Crypto",
+    "other": "Other"
+  },
+  "market": {
+    "volume": "Volume",
+    "ends": "Ends",
+    "live": "LIVE",
+    "resolved": "RESOLVED",
+    "upcoming": "UPCOMING",
+    "bets": "bets"
+  },
+  "activity": {
+    "noTrending": "No trending markets",
+    "noEndingSoon": "No markets ending soon",
+    "ended": "Ended"
+  },
+  "myBets": {
+    "title": "My Bets",
+    "description": "Connect your wallet to view your betting history and positions.",
+    "trackPositions": "Track your positions, history, and winnings",
+    "disconnecting": "Disconnecting..."
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Top predictors ranked by performance",
+    "stats": {
+      "totalPredictors": "Total Predictors",
+      "totalVolume": "Total Volume",
+      "totalBets": "Total Bets",
+      "activeMarkets": "Active Markets"
+    },
+    "tabs": {
+      "topEarners": "Top Earners",
+      "mostWins": "Most Wins",
+      "highestVolume": "Highest Volume",
+      "mostActive": "Most Active"
+    },
+    "table": {
+      "title": "Rankings",
+      "rank": "Rank",
+      "predictor": "Predictor",
+      "pnl": "P&L",
+      "winRate": "Win Rate",
+      "roi": "ROI",
+      "bets": "Bets",
+      "wins": "Wins",
+      "volume": "Volume",
+      "noData": "No predictors found. Be the first to place a bet!"
+    }
+  },
+  "dashboard": {
+    "pnlSummary": {
+      "totalPnL": "Total P&L",
+      "winRate": "Win Rate",
+      "aboveAverage": "Above average",
+      "belowAverage": "Below average",
+      "totalWagered": "Total Wagered",
+      "totalWon": "Total Won",
+      "activeBets": "Active Bets",
+      "noActivePositions": "No active positions",
+      "onePosition": "1 position",
+      "positions": "{count} positions"
+    },
+    "activePositions": {
+      "title": "Active Positions",
+      "titleWithCount": "Active Positions ({count})",
+      "noPositions": "No active positions",
+      "browseMarkets": "Browse Markets",
+      "staked": "Staked:",
+      "currentOdds": "Current Odds:",
+      "entry": "Entry:",
+      "unrealizedPnL": "Unrealized P&L"
+    },
+    "betHistory": {
+      "title": "Bet History",
+      "noBets": "No bets found",
+      "market": "Market",
+      "outcome": "Outcome",
+      "amount": "Amount",
+      "result": "Result",
+      "pnl": "P&L",
+      "date": "Date",
+      "filter": {
+        "all": "All",
+        "won": "Won",
+        "lost": "Lost",
+        "pending": "Pending"
+      },
+      "sort": {
+        "date": "Date",
+        "amount": "Amount",
+        "pnl": "P&L"
+      }
+    },
+    "claimable": {
+      "title": "Claimable Winnings",
+      "noWinnings": "No unclaimed winnings",
+      "claimAll": "Claim All",
+      "claiming": "Claiming...",
+      "claim": "Claim",
+      "betOn": "Bet {amount} VERY on",
+      "winnings": "Winnings"
+    }
+  }
+}
