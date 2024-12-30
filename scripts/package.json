@@ -1,0 +1,28 @@
+{
+  "name": "jokjipge-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "faucet": "npx tsx faucet.ts",
+    "list-markets": "npx tsx list-markets.ts",
+    "create-market": "npx tsx create-market.ts",
+    "resolve-market": "npx tsx resolve-market.ts",
+    "place-test-bets": "npx tsx place-test-bets.ts",
+    "seed": "npx tsx seed/index.ts",
+    "seed:upload-images": "npx tsx seed/upload-images.ts",
+    "seed:create-metadata": "npx tsx seed/create-metadata.ts",
+    "seed:deploy": "npx tsx seed/deploy-and-seed.ts",
+    "seed:full": "npx tsx seed/full-seed.ts"
+  },
+  "dependencies": {
+    "viem": "^2.36.0",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2",
+    "form-data": "^4.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "@types/node": "^20.0.0"
+  }
+}
