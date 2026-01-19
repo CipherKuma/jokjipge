@@ -14,6 +14,9 @@ import {
 const POLL_INTERVAL = 10000 // 10 seconds
 const MAX_ITEMS = 20
 
+// API route for subgraph queries (server-side proxy)
+const SUBGRAPH_API = '/api/subgraph'
+
 // GraphQL queries
 const RECENT_ACTIVITY_QUERY = `
   query GetRecentActivity($first: Int!) {
@@ -65,13 +68,12 @@ const ENDING_SOON_QUERY = `
 `
 
 interface UseActivityFeedOptions {
-  subgraphUrl?: string
   pollInterval?: number
   maxItems?: number
 }
 
-async function fetchGraphQL(url: string, query: string, variables: Record<string, any> = {}) {
-  const response = await fetch(url, {
+async function fetchGraphQL(query: string, variables: Record<string, unknown> = {}) {
+  const response = await fetch(SUBGRAPH_API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query, variables }),
@@ -90,7 +92,7 @@ async function fetchGraphQL(url: string, query: string, variables: Record<string
 }
 
 export function useActivityFeed(options: UseActivityFeedOptions = {}) {
-  const { subgraphUrl, pollInterval = POLL_INTERVAL, maxItems = MAX_ITEMS } = options
+  const { pollInterval = POLL_INTERVAL, maxItems = MAX_ITEMS } = options
 
   const [state, setState] = useState<ActivityFeedState>({
     items: [],
@@ -101,13 +103,8 @@ export function useActivityFeed(options: UseActivityFeedOptions = {}) {
   const previousIdsRef = useRef<Set<string>>(new Set())
 
   const fetchActivity = useCallback(async () => {
-    if (!subgraphUrl) {
-      setState({ items: [], loading: false, error: 'No subgraph URL configured' })
-      return
-    }
-
     try {
-      const data = await fetchGraphQL(subgraphUrl, RECENT_ACTIVITY_QUERY, { first: maxItems })
+      const data = await fetchGraphQL(RECENT_ACTIVITY_QUERY, { first: maxItems })
 
       const items: ActivityItem[] = []
 
@@ -156,7 +153,7 @@ export function useActivityFeed(options: UseActivityFeedOptions = {}) {
         error: error instanceof Error ? error.message : 'Failed to fetch activity',
       }))
     }
-  }, [subgraphUrl, maxItems])
+  }, [maxItems])
 
   useEffect(() => {
     fetchActivity()
@@ -167,9 +164,7 @@ export function useActivityFeed(options: UseActivityFeedOptions = {}) {
   return { ...state, refetch: fetchActivity }
 }
 
-export function useTrendingMarkets(options: UseActivityFeedOptions = {}) {
-  const { subgraphUrl } = options
-
+export function useTrendingMarkets() {
   const [state, setState] = useState<TrendingMarketsState>({
     markets: [],
     loading: true,
@@ -177,13 +172,8 @@ export function useTrendingMarkets(options: UseActivityFeedOptions = {}) {
   })
 
   const fetchTrending = useCallback(async () => {
-    if (!subgraphUrl) {
-      setState({ markets: [], loading: false, error: 'No subgraph URL configured' })
-      return
-    }
-
     try {
-      const data = await fetchGraphQL(subgraphUrl, TRENDING_MARKETS_QUERY)
+      const data = await fetchGraphQL(TRENDING_MARKETS_QUERY)
 
       const markets: TrendingMarket[] = (data.markets || []).map((m: any) => ({
         id: m.id,
@@ -203,7 +193,7 @@ export function useTrendingMarkets(options: UseActivityFeedOptions = {}) {
         error: error instanceof Error ? error.message : 'Failed to fetch trending',
       }))
     }
-  }, [subgraphUrl])
+  }, [])
 
   useEffect(() => {
     fetchTrending()
@@ -214,9 +204,7 @@ export function useTrendingMarkets(options: UseActivityFeedOptions = {}) {
   return { ...state, refetch: fetchTrending }
 }
 
-export function useEndingSoon(options: UseActivityFeedOptions = {}) {
-  const { subgraphUrl } = options
-
+export function useEndingSoon() {
   const [state, setState] = useState<EndingSoonState>({
     markets: [],
     loading: true,
@@ -224,14 +212,9 @@ export function useEndingSoon(options: UseActivityFeedOptions = {}) {
   })
 
   const fetchEndingSoon = useCallback(async () => {
-    if (!subgraphUrl) {
-      setState({ markets: [], loading: false, error: 'No subgraph URL configured' })
-      return
-    }
-
     try {
       const deadline = Math.floor(Date.now() / 1000) + 24 * 60 * 60
-      const data = await fetchGraphQL(subgraphUrl, ENDING_SOON_QUERY, {
+      const data = await fetchGraphQL(ENDING_SOON_QUERY, {
         deadline: deadline.toString(),
       })
 
@@ -261,7 +244,7 @@ export function useEndingSoon(options: UseActivityFeedOptions = {}) {
         error: error instanceof Error ? error.message : 'Failed to fetch ending soon',
       }))
     }
-  }, [subgraphUrl])
+  }, [])
 
   useEffect(() => {
     fetchEndingSoon()

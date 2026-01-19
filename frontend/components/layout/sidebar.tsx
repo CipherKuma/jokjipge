@@ -27,7 +27,6 @@ import type { MarketCategory } from '@/lib/types/market'
 
 interface SidebarProps {
   className?: string
-  subgraphUrl?: string
 }
 
 const categoryConfig = [
@@ -46,7 +45,6 @@ const statusConfig = [
 
 export function Sidebar({
   className,
-  subgraphUrl,
 }: SidebarProps) {
   const { t } = useTranslation()
   const { filters, updateFilter } = useFilterContext()
@@ -179,7 +177,7 @@ export function Sidebar({
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <TrendingMarkets subgraphUrl={subgraphUrl} />
+            <TrendingMarkets />
           </CollapsibleContent>
         </Collapsible>
 
@@ -203,7 +201,7 @@ export function Sidebar({
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <EndingSoon subgraphUrl={subgraphUrl} />
+            <EndingSoon />
           </CollapsibleContent>
         </Collapsible>
       </ScrollArea>

@@ -7,7 +7,9 @@ import {
   type LeaderboardUser,
   type GlobalStats,
 } from '@/lib/graphql/queries/leaderboard'
-import { getSubgraphEndpoint, hasSubgraph } from '@/constants/subgraphs'
+
+// API route for subgraph queries (server-side proxy)
+const SUBGRAPH_API = '/api/subgraph'
 
 export type SortBy = 'pnl' | 'winCount' | 'totalWagered' | 'totalBets'
 
@@ -58,12 +60,6 @@ export function useLeaderboard(): UseLeaderboardReturn {
   const [skip, setSkip] = useState(0)
   const [hasMore, setHasMore] = useState(true)
 
-  // Use subgraph constants for VeryChain Mainnet (chainId: 4613)
-  const CHAIN_ID = 4613
-  const subgraphUrl = hasSubgraph(CHAIN_ID, 'predictionmarket')
-    ? getSubgraphEndpoint(CHAIN_ID, 'predictionmarket')
-    : null
-
   const mapToEntry = useCallback(
     (user: LeaderboardUser, index: number, baseRank: number): LeaderboardEntry => {
       const totalBets = parseInt(user.totalBets)
@@ -97,15 +93,6 @@ export function useLeaderboard(): UseLeaderboardReturn {
 
   const fetchLeaderboard = useCallback(
     async (resetPagination = true) => {
-      if (!subgraphUrl) {
-        setError('Subgraph not configured')
-        setEntries([])
-        setStats({ totalUsers: 0, totalVolume: 0n, totalBets: 0, activeMarkets: 0 })
-        setLoading(false)
-        setHasMore(false)
-        return
-      }
-
       if (resetPagination) {
         setSkip(0)
         setLoading(true)
@@ -124,7 +111,7 @@ export function useLeaderboard(): UseLeaderboardReturn {
         }
 
         const [leaderboardRes, statsRes] = await Promise.all([
-          fetch(subgraphUrl, {
+          fetch(SUBGRAPH_API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -137,7 +124,7 @@ export function useLeaderboard(): UseLeaderboardReturn {
               },
             }),
           }),
-          fetch(subgraphUrl, {
+          fetch(SUBGRAPH_API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query: GET_GLOBAL_STATS }),
@@ -187,7 +174,7 @@ export function useLeaderboard(): UseLeaderboardReturn {
         setLoading(false)
       }
     },
-    [subgraphUrl, sortBy, skip, mapToEntry, entries.length]
+    [sortBy, skip, mapToEntry, entries.length]
   )
 
   const loadMore = useCallback(async () => {

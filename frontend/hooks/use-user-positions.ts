@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useAccount, usePublicClient } from '@/lib/web3'
-import { getSubgraphEndpoint, hasSubgraph } from '@/constants/subgraphs'
 import {
   GET_USER_POSITIONS,
   GET_USER_BETS,
@@ -12,6 +11,9 @@ import {
 } from '@/lib/graphql/queries/user'
 import type { Position, Bet, UserStats, BetOutcome, Market, MarketStatus } from '@/lib/types/market'
 import type { Address } from 'viem'
+
+// API route for subgraph queries (server-side proxy)
+const SUBGRAPH_API = '/api/subgraph'
 
 // Contract ABIs for reading position data
 const MARKET_ABI = [
@@ -64,8 +66,6 @@ interface ContractPosition {
   noShares: bigint
   claimed: boolean
 }
-
-const CHAIN_ID = 4613 // VeryChain Mainnet
 
 interface UseUserPositionsReturn {
   stats: UserStats | null
@@ -125,12 +125,7 @@ function mapSubgraphPositionToBet(sp: SubgraphPosition): Bet {
 }
 
 async function fetchSubgraph(query: string, variables: Record<string, unknown>): Promise<unknown> {
-  if (!hasSubgraph(CHAIN_ID, 'predictionmarket')) {
-    throw new Error('Subgraph not configured')
-  }
-
-  const endpoint = getSubgraphEndpoint(CHAIN_ID, 'predictionmarket')
-  const response = await fetch(endpoint, {
+  const response = await fetch(SUBGRAPH_API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query, variables }),

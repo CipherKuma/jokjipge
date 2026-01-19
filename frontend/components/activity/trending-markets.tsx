@@ -10,7 +10,6 @@ import { formatEther } from 'viem'
 import { useTranslation } from '@/lib/i18n'
 
 interface TrendingMarketsProps {
-  subgraphUrl?: string
   className?: string
 }
 
@@ -29,10 +28,10 @@ function truncateQuestion(question: string, maxLength = 50): string {
   return `${question.slice(0, maxLength)}...`
 }
 
-export function TrendingMarkets({ subgraphUrl, className }: TrendingMarketsProps) {
+export function TrendingMarkets({ className }: TrendingMarketsProps) {
   const router = useRouter()
   const { t } = useTranslation()
-  const { markets, loading, error } = useTrendingMarkets({ subgraphUrl })
+  const { markets, loading, error } = useTrendingMarkets()
 
   const handleMarketClick = (marketId: string) => {
     router.push(`/markets/${marketId}`)

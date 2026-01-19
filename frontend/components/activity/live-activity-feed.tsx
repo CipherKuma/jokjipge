@@ -11,21 +11,18 @@ import { useActivityFeed } from '@/hooks/activity/use-activity-feed'
 import { Radio, RefreshCw, AlertCircle } from 'lucide-react'
 
 interface LiveActivityFeedProps {
-  subgraphUrl?: string
   className?: string
   maxItems?: number
   collapsed?: boolean
 }
 
 export function LiveActivityFeed({
-  subgraphUrl,
   className,
   maxItems = 20,
   collapsed = false,
 }: LiveActivityFeedProps) {
   const router = useRouter()
   const { items, loading, error, refetch } = useActivityFeed({
-    subgraphUrl,
     maxItems,
   })
 

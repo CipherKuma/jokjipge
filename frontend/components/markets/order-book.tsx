@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { getSubgraphEndpoint, hasSubgraph } from '@/constants/subgraphs'
 import { formatEther } from 'viem'
 import { TrendingUp, TrendingDown } from 'lucide-react'
+
+// API route for subgraph queries (server-side proxy)
+const SUBGRAPH_API = '/api/subgraph'
 
 export interface Bet {
   id: string
@@ -26,7 +28,6 @@ interface OrderBookProps {
   marketId: string
 }
 
-const CHAIN_ID = 4613 // VeryChain Mainnet
 const POLL_INTERVAL = 10000 // 10 seconds
 
 export const OrderBook = forwardRef<OrderBookHandle, OrderBookProps>(
@@ -34,10 +35,6 @@ export const OrderBook = forwardRef<OrderBookHandle, OrderBookProps>(
   const [bets, setBets] = useState<Bet[]>([])
   const [loading, setLoading] = useState(true)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
-
-  const subgraphUrl = hasSubgraph(CHAIN_ID, 'predictionmarket')
-    ? getSubgraphEndpoint(CHAIN_ID, 'predictionmarket')
-    : null
 
   // Expose addOptimisticBet method via ref
   useImperativeHandle(ref, () => ({
@@ -47,7 +44,7 @@ export const OrderBook = forwardRef<OrderBookHandle, OrderBookProps>(
   }))
 
   const fetchBets = useCallback(async () => {
-    if (!subgraphUrl || !marketId) return
+    if (!marketId) return
 
     try {
       const query = `
@@ -68,7 +65,7 @@ export const OrderBook = forwardRef<OrderBookHandle, OrderBookProps>(
         }
       `
 
-      const response = await fetch(subgraphUrl, {
+      const response = await fetch(SUBGRAPH_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, variables: { marketId } }),
@@ -91,7 +88,7 @@ export const OrderBook = forwardRef<OrderBookHandle, OrderBookProps>(
     } finally {
       setLoading(false)
     }
-  }, [subgraphUrl, marketId])
+  }, [marketId])
 
   useEffect(() => {
     fetchBets()

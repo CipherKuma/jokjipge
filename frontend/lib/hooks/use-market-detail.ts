@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { Market, MarketCategory, MarketStatus } from '@/lib/types/market'
-import { getSubgraphEndpoint, hasSubgraph } from '@/constants/subgraphs'
 
 interface UseMarketDetailReturn {
   market: Market | null
@@ -12,6 +11,9 @@ interface UseMarketDetailReturn {
 }
 
 const POLL_INTERVAL = 30000 // 30 seconds
+
+// API route for subgraph queries (server-side proxy)
+const SUBGRAPH_API = '/api/subgraph'
 
 /**
  * Hook to fetch a single market from the subgraph
@@ -23,22 +25,9 @@ export function useMarketDetail(marketId: string): UseMarketDetailReturn {
   const [error, setError] = useState<string | null>(null)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Use subgraph constants for VeryChain Mainnet (chainId: 4613)
-  const CHAIN_ID = 4613
-  const subgraphUrl = hasSubgraph(CHAIN_ID, 'predictionmarket')
-    ? getSubgraphEndpoint(CHAIN_ID, 'predictionmarket')
-    : null
-
   const fetchMarket = useCallback(async () => {
     if (!marketId) {
       setError('No market ID provided')
-      setLoading(false)
-      return
-    }
-
-    if (!subgraphUrl) {
-      setError('Subgraph not configured')
-      setMarket(null)
       setLoading(false)
       return
     }
@@ -65,7 +54,7 @@ export function useMarketDetail(marketId: string): UseMarketDetailReturn {
         }
       `
 
-      const response = await fetch(subgraphUrl, {
+      const response = await fetch(SUBGRAPH_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, variables: { id: marketId } }),
@@ -89,7 +78,7 @@ export function useMarketDetail(marketId: string): UseMarketDetailReturn {
     } finally {
       setLoading(false)
     }
-  }, [marketId, subgraphUrl])
+  }, [marketId])
 
   // Initial fetch and polling
   useEffect(() => {

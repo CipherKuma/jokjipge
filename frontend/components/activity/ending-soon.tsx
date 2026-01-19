@@ -10,7 +10,6 @@ import { Clock, ChevronRight, AlertCircle } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
 
 interface EndingSoonProps {
-  subgraphUrl?: string
   className?: string
 }
 
@@ -61,10 +60,10 @@ function CountdownTimer({ resolutionDate, endedText }: { resolutionDate: number;
   )
 }
 
-export function EndingSoon({ subgraphUrl, className }: EndingSoonProps) {
+export function EndingSoon({ className }: EndingSoonProps) {
   const router = useRouter()
   const { t } = useTranslation()
-  const { markets, loading, error } = useEndingSoon({ subgraphUrl })
+  const { markets, loading, error } = useEndingSoon()
 
   const handleMarketClick = (marketId: string) => {
     router.push(`/markets/${marketId}`)

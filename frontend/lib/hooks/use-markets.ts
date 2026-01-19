@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import type { Market, MarketStats, MarketFilter } from '@/lib/types/market'
-import { getSubgraphEndpoint, hasSubgraph } from '@/constants/subgraphs'
 
 interface UseMarketsReturn {
   markets: Market[]
@@ -16,9 +15,12 @@ interface UseMarketsReturn {
 
 const MARKETS_PER_PAGE = 12
 
+// API route for subgraph queries (server-side proxy)
+const SUBGRAPH_API = '/api/subgraph'
+
 /**
  * Hook to fetch markets from the subgraph
- * Uses direct fetch following Shinroe's pattern
+ * Uses API route to avoid exposing indexer URL to client
  */
 export function useMarkets(filters: MarketFilter = {}): UseMarketsReturn {
   const [markets, setMarkets] = useState<Market[]>([])
@@ -31,12 +33,6 @@ export function useMarkets(filters: MarketFilter = {}): UseMarketsReturn {
   const [error, setError] = useState<string | null>(null)
   const [skip, setSkip] = useState(0)
   const [hasMore, setHasMore] = useState(true)
-
-  // Use subgraph constants for VeryChain Mainnet (chainId: 4613)
-  const CHAIN_ID = 4613
-  const subgraphUrl = hasSubgraph(CHAIN_ID, 'predictionmarket')
-    ? getSubgraphEndpoint(CHAIN_ID, 'predictionmarket')
-    : null
 
   const buildWhereClause = useCallback(() => {
     const conditions: string[] = []
@@ -75,15 +71,6 @@ export function useMarkets(filters: MarketFilter = {}): UseMarketsReturn {
 
   const fetchMarkets = useCallback(
     async (resetPagination = true) => {
-      if (!subgraphUrl) {
-        setError('Subgraph not configured')
-        setMarkets([])
-        setStats({ totalMarkets: 0, totalVolume: 0n, activeBets: 0 })
-        setLoading(false)
-        setHasMore(false)
-        return
-      }
-
       if (resetPagination) {
         setSkip(0)
         setLoading(true)
@@ -128,7 +115,7 @@ export function useMarkets(filters: MarketFilter = {}): UseMarketsReturn {
           }
         `
 
-        const response = await fetch(subgraphUrl, {
+        const response = await fetch(SUBGRAPH_API, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query }),
@@ -169,7 +156,7 @@ export function useMarkets(filters: MarketFilter = {}): UseMarketsReturn {
         setLoading(false)
       }
     },
-    [subgraphUrl, buildWhereClause, buildOrderBy, skip]
+    [buildWhereClause, buildOrderBy, skip]
   )
 
   const loadMore = useCallback(async () => {
