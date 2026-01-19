@@ -16,7 +16,16 @@ interface PinataResponse {
 }
 
 const PINATA_API_URL = 'https://api.pinata.cloud/pinning'
-const PINATA_GATEWAY_URL = 'https://gateway.pinata.cloud/ipfs'
+
+// Use dedicated gateway if configured, otherwise fall back to public gateway
+function getPinataGatewayUrl(): string {
+  const dedicatedGateway = process.env.NEXT_PUBLIC_PINATA_GATEWAY
+  if (dedicatedGateway) {
+    const gateway = dedicatedGateway.replace(/\/$/, '')
+    return gateway.startsWith('http') ? `${gateway}/ipfs` : `https://${gateway}/ipfs`
+  }
+  return 'https://gateway.pinata.cloud/ipfs'
+}
 
 function getHeaders() {
   const jwt = process.env.PINATA_JWT
@@ -100,7 +109,7 @@ export async function pinFileFromBuffer(
 }
 
 export function getIPFSUrl(hash: string): string {
-  return `${PINATA_GATEWAY_URL}/${hash}`
+  return `${getPinataGatewayUrl()}/${hash}`
 }
 
 export function extractIPFSHash(url: string): string | null {
